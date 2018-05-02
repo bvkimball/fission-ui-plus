@@ -1,0 +1,16 @@
+<h1 mat-dialog-title>Add Trigger</h1>
+<h2>What's your trigger?</h2>
+<div mat-dialog-content>
+  <mat-form-field>
+    <input matInput placeholder="Path" [(ngModel)]="data.path">
+  </mat-form-field>
+  <mat-select placeholder="Method" [(ngModel)]="data.methods">
+    <mat-option *ngFor="let method of methods" [value]="method.value">
+        {{ method.label }}
+    </mat-option>
+</mat-select>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
+</div>

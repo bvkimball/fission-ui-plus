@@ -1,0 +1,111 @@
+<mat-tab-group class="function-tab-group">
+  <mat-tab label="Source">
+    <mat-card class="example-card" *ngIf="function$ | async as fn">
+      <mat-card-header>
+        <mat-card-title>{{ fn?.metadata?.name }}</mat-card-title>
+        <mat-card-subtitle>Environment: {{ fn?.spec?.environment?.name }}</mat-card-subtitle>
+      </mat-card-header>
+      <div mat-card-image
+           ace-editor
+           [(text)]="text"
+           [mode]="getMode(fn?.spec?.environment?.name)"
+           [theme]="'clouds'"
+           [options]="options"
+           [readOnly]="false"
+           [autoUpdateContent]="true"
+           [durationBeforeCallback]="1000"
+           (textChanged)="onChange($event)"
+           style="min-height: 200px; min-width: 550px; width:100%; overflow: auto;">
+      </div>
+      <mat-card-actions>
+        <button mat-button>CANCEL</button>
+        <button mat-button (click)="saveFunction(fn)">SAVE</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Trigger">
+    <button mat-mini-fab
+      color="accent"
+      (click)="openAddTrigger()">
+      <mat-icon>add</mat-icon>
+    </button>
+    <mat-card class="test-card" *ngIf="trigger$ | async as ht">
+      <mat-card-header>
+        <mat-card-title>{{ ht?.metadata?.name }}</mat-card-title>
+        <mat-card-subtitle>Environment: ht?.metadata?.namespace</mat-card-subtitle>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="form-container"
+             fxLayout="column">
+          <mat-form-field>
+            <mat-select placeholder="Method" [(ngModel)]="ht.spec.method">
+              <mat-option value="GET">GET</mat-option>
+              <mat-option value="PUT">PUT</mat-option>
+              <mat-option value="POST">POST</mat-option>
+              <mat-option value="DELETE">DELETE</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field>
+            <input matInput
+                   placeholder="Path" [(ngModel)]="ht.spec.relativeurl">
+          </mat-form-field>
+        </div>
+      </mat-card-content>
+      <mat-card-actions>
+        <button mat-button>CANCEL</button>
+        <button mat-button>TEST</button>
+      </mat-card-actions>
+    </mat-card>
+  </mat-tab>
+  <mat-tab label="Test">
+      <mat-card class="test-card" *ngIf="trigger$ | async as ht2">
+        <mat-card-header>
+          <mat-card-title>{{ ht2?.metadata?.name }}</mat-card-title>
+          <mat-card-subtitle>Environment: ht2?.metadata?.namespace</mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <div class="form-container"
+               fxLayout="column">
+            <mat-form-field>
+                  <input matInput
+                         placeholder="Path"
+                         [(ngModel)]="ht2.spec.relativeurl">
+                </mat-form-field>
+            <mat-form-field>
+              <mat-select placeholder="Method" [(ngModel)]="ht2.spec.method">
+                <mat-option value="GET">GET</mat-option>
+                <mat-option value="PUT">PUT</mat-option>
+                <mat-option value="POST">POST</mat-option>
+                <mat-option value="DELETE">DELETE</mat-option>
+              </mat-select>
+            </mat-form-field>
+            <div *ngIf="ht2.testResults">
+              <h4>Results: </h4>
+              <div mat-card-image
+                ace-editor
+                [text]="ht2.testResults"
+                [mode]="json"
+                [theme]="'clouds'"
+                [options]="options"
+                [readOnly]="true"
+                [autoUpdateContent]="true"
+                [durationBeforeCallback]="1000"
+                style="min-height: 100px; min-width: 550px; width:100%; overflow: auto;">
+            </div>
+          </div>
+          </div>
+        </mat-card-content>
+        <mat-card-actions>
+          <button mat-button>CANCEL</button>
+          <button mat-button (click)="testFn(ht2)">TEST</button>
+        </mat-card-actions>
+      </mat-card>
+    </mat-tab>
+  <mat-tab label="Workflow" *ngIf="workflow">
+    <app-graph [data]="workflow"></app-graph>    
+  </mat-tab>
+  <mat-tab label="Logs"
+           disabled>
+    {{function$ | async | json}}
+  </mat-tab>
+</mat-tab-group>
